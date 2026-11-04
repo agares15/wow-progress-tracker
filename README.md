@@ -1,50 +1,55 @@
 # WoW Progress Tracker (Foundry VTT v14)
 
-Un módulo **ultraligero**, **altamente personalizable** y **system-agnostic** (compatible con cualquier sistema de rol) para **Foundry VTT v14**, construido nativamente sobre `ApplicationV2`, `HandlebarsApplicationMixin` y `DataModel`.
+An **ultra-lightweight**, **highly customizable**, and **system-agnostic** progress tracker module for **Foundry VTT v14**, built natively on `ApplicationV2`, `HandlebarsApplicationMixin`, and `DataModel`.
 
-## Características Principales
+## Key Features
 
-- **5 Estilos Visuales de Progreso**:
-  1. **Barra Continua (`continuous`)**: Ideal para distancias (`km`, `ft`), viajes o metas porcentuales.
-  2. **Bloques Segmentados (`segmented`)**: Ideal para *Skill Checks*, rituales o fases discretas. Permite hacer clic directamente en un bloque para llenarlo o vaciarlo.
-  3. **Iconos / Pips (`icons`)**: Muestra una fila de iconos de FontAwesome o imágenes personalizadas que se iluminan conforme avanza la meta (ideal para recolectar objetos o llaves).
-  4. **Persecución / Tug-of-War (`chase`)**: Barra enfrentada a dos colores con marcador móvil para persecuciones o disputas.
-  5. **Reloj Circular (`clock`)**: Reloj radial estilo *Blades in the Dark* junto con segmentos interactivos.
-- **Control Total de Visibilidad por el GM**:
-  - **Oculto (Solo GM)**: Solo visible para el Director de Juego.
-  - **Público (Todos)**: Visible en tiempo real para todos los jugadores.
-  - **Jugadores Específicos**: Selecciona individualmente qué jugadores pueden ver cada barra.
-  - **Ocultar Números (`???`)**: Muestra el avance visual de la barra sin revelar las cifras exactas a los jugadores.
-  - **Edición Opcional por Jugadores**: Permite que los jugadores autorizados también incrementen o disminuyan una barra específica.
-- **Modo Sin Bordes (Frameless HUD)**: Bloquea el HUD con el icono del candado para ocultar el marco de ventana de Foundry y dejar las barras flotando limpiamente sobre el lienzo.
+- **6 Visual Bar Types**:
+  1. **Continuous Bar (`continuous`)**: Smooth progress bar ideal for distances, journeys, or percentage goals. Supports custom background textures.
+  2. **Milestone Bar (`milestones`)**: Continuous bar with up to **10 customizable milestones** placed at any value along the progress track, each with its own FontAwesome icon or custom image that lights up when reached.
+  3. **Segmented (`segmented`)**: Discrete blocks ideal for skill checks, trials, or stages. Click directly on any segment to fill or clear it.
+  4. **Icon-Pips (`icons`)**: Displays a row of FontAwesome icons or custom images that light up as progress advances (great for item collections, keys, or tokens).
+  5. **Tug-of-War (`chase`)**: Dual-color contested bar with a moving marker icon for chases or opposing forces.
+  6. **Radial Clock (`clock`)**: Crisp SVG pie-slice clock ideal for tension clocks or timed events.
+- **Granular GM Control**:
+  - **Show / Hide to Players**: Toggle player visibility with a single click from the GM HUD or configuration form.
+  - **Hide Title from Players**: Show only the visual progress bar to players while keeping the title secret.
+  - **GM-Only Step Counter**: Exact numeric counters (`1 / 10`) are visible exclusively to the GM.
+  - **Optional Player Interaction**: Allow players to increment or decrement specific progress bars when enabled by the GM.
+- **Clean Frameless Player Overlay**:
+  - For players, visible progress bars automatically float in the top-right corner immediately next to the right sidebar—with transparent card backgrounds, no window frame, and no close button.
+  - For the GM, a dedicated HUD window (with optional frameless lock mode) is accessible from the Scene Controls toolbar.
 
-## Uso con Macros (API Pública)
+## Macro API (`WoWProgressTracker`)
 
-El módulo expone su API globalmente en `WoWProgressTracker` (o `game.modules.get("wow-progress-tracker").api`):
+The module exposes its public API globally at `WoWProgressTracker` (or `game.modules.get("wow-progress-tracker").api`):
 
 ```javascript
-// Crear una barra de persecución visible para todos
+// Create a Milestone Bar visible to players
 await WoWProgressTracker.createTracker({
-  title: "Huida por los Tejados",
-  description: "Escapar antes de que lleguen los guardias",
-  category: "chase",
-  styleType: "chase",
-  value: 5,
+  title: "Ritual of the Eclipse",
+  description: "Stop the cultists before the final convergence",
+  styleType: "milestones",
+  value: 2,
   max: 10,
   step: 1,
-  primaryColor: "#ef4444",
-  secondaryColor: "#3b82f6",
-  icon: "fa-solid fa-person-running",
-  visibility: "all"
+  primaryColor: "#a855f7",
+  secondaryColor: "#1e293b",
+  icon: "fa-solid fa-moon",
+  milestones: [
+    { value: 5, icon: "fa-solid fa-bolt" },
+    { value: 10, icon: "fa-solid fa-skull" }
+  ],
+  showToPlayers: true,
+  hideTitle: false
 });
 
-// Incrementar o disminuir una barra por nombre o ID
-await WoWProgressTracker.modifyProgress("Huida por los Tejados", 1);
+// Increase or decrease progress by ID or Title
+await WoWProgressTracker.modifyProgress("Ritual of the Eclipse", 1);
 
-// Definir un valor exacto
-await WoWProgressTracker.setProgress("Huida por los Tejados", 8);
+// Set an exact progress value
+await WoWProgressTracker.setProgress("Ritual of the Eclipse", 6);
 
-// Cambiar visibilidad a jugadores específicos
-await WoWProgressTracker.setVisibility("Huida por los Tejados", "custom", ["USER_ID_1"]);
+// Show or hide a tracker from players
+await WoWProgressTracker.setVisibility("Ritual of the Eclipse", false);
 ```
-
