@@ -1,6 +1,10 @@
-# WoW Progress Tracker (Foundry VTT v14)
+# WoW Progress Tracker (Foundry VTT)
+
+![screenshot-2026-11-04-011350.avif](https://user51675.na.imgto.link/public/20261104/8a19e81a2c290928de740ef9-screenshot-2026-11-04-011350.avif)
 
 An **ultra-lightweight**, **highly customizable**, and **system-agnostic** progress tracker module for **Foundry VTT v14**
+
+![screenshot-2026-11-04-012239.avif](https://user51675.na.imgto.link/public/20261104/3abbe37e9cd987fdecf2d462-screenshot-2026-11-04-012239.avif)
 
 ## Key Features
 
