@@ -1,0 +1,802 @@
+/* ==========================================================================
+   WoW Progress Tracker - Lightweight CSS (Foundry VTT v14 ApplicationV2)
+   Uses CSS Custom Properties & GPU-friendly transitions
+   ========================================================================== */
+
+.wow-pt-app {
+  --pt-bg-surface: rgba(17, 24, 39, 0.92);
+  --pt-bg-card: transparent;
+  --pt-border: rgba(255, 255, 255, 0.14);
+  --pt-text: #f8fafc;
+  --pt-text-muted: #cbd5e1;
+  --pt-accent: #3b82f6;
+  --pt-danger: #ef4444;
+  --pt-radius: 8px;
+}
+
+/* ==========================================================================
+   Player Top-Right Floating Overlay (Relative next to #sidebar, uncloseable)
+   ========================================================================== */
+.wow-pt-player-overlay {
+  position: relative;
+  align-self: flex-end;
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+  margin-right: 6px;
+  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
+  z-index: 60;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+}
+
+.wow-pt-player-overlay:empty {
+  display: none;
+  margin: 0;
+}
+
+.wow-pt-player-overlay .wow-pt-card {
+  width: 280px;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   Frameless / Overlay Lock Mode for GM HUD
+   ========================================================================== */
+.wow-pt-hud.is-frameless {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.wow-pt-hud.is-frameless>.window-header {
+  display: none !important;
+}
+
+.wow-pt-hud.is-frameless .window-content {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* HUD Wrapper & Mini Toolbar */
+.wow-pt-hud-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--pt-text);
+  font-size: 13px;
+}
+
+.wow-pt-hud-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--pt-border);
+  border-radius: 6px;
+}
+
+.wow-pt-hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--pt-text-muted);
+}
+
+.wow-pt-hud-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.wow-pt-toolbar-btn,
+.wow-pt-mini-btn,
+.wow-pt-step-btn,
+.wow-pt-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.72);
+  color: var(--pt-text);
+  border: 1px solid var(--pt-border);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+  padding: 0;
+}
+
+.wow-pt-toolbar-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+
+.wow-pt-toolbar-btn:hover,
+.wow-pt-mini-btn:hover,
+.wow-pt-step-btn:hover,
+.wow-pt-icon-btn:hover {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.wow-pt-toolbar-btn.is-active {
+  background: var(--pt-accent);
+  border-color: var(--pt-accent);
+}
+
+/* Tracker Cards List (Transparent background, right-aligned bars & labels) */
+.wow-pt-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.wow-pt-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  padding: 2px 4px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  color: var(--pt-text);
+  text-align: left;
+}
+
+.wow-pt-player-overlay .wow-pt-card.style-icons,
+.wow-pt-list .wow-pt-card.style-icons {
+  width: fit-content;
+  margin-left: auto;
+}
+
+.wow-pt-card.style-clock {
+  text-align: right;
+}
+
+.wow-pt-card.vis-hidden {
+  opacity: 0.82;
+}
+
+.wow-pt-card-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.wow-pt-card.style-clock .wow-pt-card-header {
+  justify-content: flex-end;
+}
+
+.wow-pt-title-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  text-align: left;
+}
+
+.wow-pt-card.style-clock .wow-pt-title-group {
+  justify-content: flex-end;
+  margin-left: auto;
+  text-align: right;
+}
+
+.wow-pt-badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--pt-primary, #3b82f6);
+  flex-shrink: 0;
+  font-size: 18px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.wow-pt-badge-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+.wow-pt-titles {
+  min-width: 0;
+}
+
+.wow-pt-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pt-text);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9);
+}
+
+.wow-pt-subtitle {
+  margin: 1px 0 0;
+  font-size: 14px;
+  color: var(--pt-text-muted);
+  line-height: 1;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+}
+
+.wow-pt-meta-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.wow-pt-value-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.72);
+  color: var(--pt-text);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+
+.wow-pt-gm-tools {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.wow-pt-mini-btn {
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+}
+
+.wow-pt-mini-btn.danger:hover,
+.wow-pt-icon-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.35);
+  border-color: var(--pt-danger);
+  color: #fca5a5;
+}
+
+/* Progress Bar Row */
+.wow-pt-bar-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.wow-pt-bar-row.is-clock-row,
+.wow-pt-card.style-icons .wow-pt-bar-row {
+  width: auto;
+  margin-left: auto;
+}
+
+.wow-pt-step-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.wow-pt-visual-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.wow-pt-bar-row.is-clock-row .wow-pt-visual-container,
+.wow-pt-card.style-icons .wow-pt-visual-container {
+  flex: 0 0 auto;
+}
+
+/* 1. Continuous Bar */
+.wow-pt-track-continuous {
+  position: relative;
+  height: 16px;
+  border-radius: 999px;
+  background-color: var(--pt-secondary, #1e293b);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55), inset 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.wow-pt-fill-continuous {
+  height: 100%;
+  width: var(--pt-pct, 0%);
+  background: linear-gradient(90deg, var(--pt-primary, #3b82f6), color-mix(in srgb, var(--pt-primary, #3b82f6) 75%, white));
+  border-radius: 999px;
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 10px var(--pt-primary, #3b82f6);
+}
+
+/* 2. Milestone Bar */
+.wow-pt-track-milestones {
+  position: relative;
+  padding: 6px 0;
+}
+
+.wow-pt-milestone-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--pt-secondary, #1e293b);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  transition: all 0.22s ease;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.wow-pt-milestone-marker img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border: none;
+  filter: grayscale(1) opacity(0.5);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.wow-pt-milestone-marker.is-reached {
+  background: var(--pt-primary, #3b82f6);
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.wow-pt-milestone-marker.is-reached img {
+  filter: grayscale(0) opacity(1);
+}
+
+.wow-pt-milestone-marker.is-clickable {
+  cursor: pointer;
+}
+
+/* 3. Segmented */
+.wow-pt-track-segmented {
+  display: grid;
+  grid-template-columns: repeat(var(--pt-segments, 5), 1fr);
+  gap: 4px;
+  height: 16px;
+}
+
+.wow-pt-segment {
+  background: var(--pt-secondary, #1e293b);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.wow-pt-segment.is-active {
+  background: var(--pt-primary, #3b82f6);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 8px var(--pt-primary, #3b82f6);
+}
+
+.wow-pt-segment.is-clickable {
+  cursor: pointer;
+}
+
+.wow-pt-segment.is-clickable:hover {
+  transform: scaleY(1.12);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 4. Icon-Pips */
+.wow-pt-track-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.wow-pt-pip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: var(--pt-secondary, #1e293b);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.wow-pt-pip img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  border: none;
+  filter: grayscale(1) opacity(0.35);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.wow-pt-pip.is-active {
+  color: var(--pt-primary, #f59e0b);
+  border-color: var(--pt-primary, #f59e0b);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--pt-primary, #f59e0b) 55%, transparent);
+  background: color-mix(in srgb, var(--pt-primary, #f59e0b) 22%, var(--pt-secondary, #1e293b));
+}
+
+.wow-pt-pip.is-active img {
+  filter: grayscale(0) opacity(1);
+  transform: scale(1.08);
+}
+
+.wow-pt-pip.is-clickable {
+  cursor: pointer;
+}
+
+.wow-pt-pip.is-clickable:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* 5. Tug-of-War */
+.wow-pt-track-chase {
+  position: relative;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--pt-secondary, #3b82f6);
+  background-size: cover;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+  overflow: visible;
+}
+
+.wow-pt-fill-chase {
+  height: 100%;
+  width: var(--pt-pct, 50%);
+  background: var(--pt-primary, #ef4444);
+  border-radius: 999px 0 0 999px;
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wow-pt-chase-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.65);
+  transition: left 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.wow-pt-chase-marker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+/* 6. Radial Clock (Crisp SVG slices, no side bar) */
+.wow-pt-clock-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 2px 0;
+}
+
+.wow-pt-clock-svg {
+  width: 56px;
+  height: 56px;
+  overflow: visible;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.65));
+}
+
+.wow-pt-clock-slice {
+  fill: var(--pt-secondary, #18181b);
+  stroke: #0f172a;
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+  transition: fill 0.18s ease, opacity 0.15s ease;
+}
+
+.wow-pt-clock-slice.is-active {
+  fill: var(--pt-primary, #a855f7);
+}
+
+.wow-pt-clock-svg.is-clickable .wow-pt-clock-slice {
+  cursor: pointer;
+}
+
+.wow-pt-clock-svg.is-clickable .wow-pt-clock-slice:hover {
+  opacity: 0.88;
+}
+
+.wow-pt-clock-ring {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.38);
+  stroke-width: 2.5px;
+  pointer-events: none;
+}
+
+.wow-pt-clock-hub {
+  fill: #0f172a;
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 2px;
+  pointer-events: none;
+}
+
+/* Empty State */
+.wow-pt-empty {
+  text-align: center;
+  padding: 16px 10px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px dashed var(--pt-border);
+  border-radius: var(--pt-radius);
+  color: var(--pt-text-muted);
+}
+
+.wow-pt-empty p {
+  margin: 0;
+}
+
+/* ==========================================================================
+   Config Modal Styling
+   ========================================================================== */
+.wow-pt-config-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px;
+}
+
+.wow-pt-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.wow-pt-three-cols {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.wow-pt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.full-width,
+.wow-pt-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.wow-pt-field label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.wow-pt-color-row,
+.wow-pt-file-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wow-pt-color-row input[type="color"] {
+  width: 36px;
+  height: 30px;
+  padding: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.wow-pt-file-row input[type="text"] {
+  flex: 1;
+}
+
+.wow-pt-icon-btn {
+  width: 32px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+/* Milestones Editor in Config */
+.wow-pt-milestones-group.is-hidden {
+  display: none;
+}
+
+.wow-pt-milestones-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.wow-pt-mini-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid var(--pt-accent);
+  color: var(--pt-text);
+}
+
+.wow-pt-mini-add-btn:hover {
+  background: var(--pt-accent);
+}
+
+.wow-pt-milestones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--pt-border);
+  border-radius: 6px;
+  max-height: 210px;
+  overflow-y: auto;
+}
+
+.wow-pt-milestone-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.wow-pt-ms-val {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wow-pt-ms-val span {
+  font-size: 11px;
+  color: var(--pt-text-muted);
+  white-space: nowrap;
+}
+
+.wow-pt-ms-val input {
+  width: 58px;
+}
+
+.wow-pt-checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.wow-pt-config-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--pt-border);
+}
+
+.wow-pt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--pt-border);
+}
+
+.wow-pt-btn.primary {
+  background: var(--pt-accent);
+  border-color: var(--pt-accent);
+  color: #ffffff;
+}
+
+.wow-pt-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Chat Card Output */
+.wow-pt-chat-card {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #1e293b;
+  color: #f8fafc;
+  border-left: 4px solid var(--pt-primary, #3b82f6);
+}
+
+.wow-pt-chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.wow-pt-chat-val {
+  font-size: 11px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.wow-pt-chat-desc {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.wow-pt-chat-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--pt-secondary, #0f172a);
+  overflow: hidden;
+}
+
+.wow-pt-chat-fill {
+  height: 100%;
+  width: var(--pt-pct, 0%);
+  background: var(--pt-primary, #3b82f6);
+}

@@ -1,0 +1,139 @@
+<div class="wow-pt-config-body">
+  <div class="wow-pt-form-grid">
+    <div class="wow-pt-field full-width">
+      <label>{{localize "WOWPT.Config.Fields.title"}}</label>
+      <input type="text" name="title" value="{{tracker.title}}" placeholder="{{localize 'WOWPT.Config.Fields.titlePlaceholder'}}" required />
+    </div>
+
+    <div class="wow-pt-field full-width">
+      <label>{{localize "WOWPT.Config.Fields.description"}}</label>
+      <input type="text" name="description" value="{{tracker.description}}" placeholder="{{localize 'WOWPT.Config.Fields.descriptionPlaceholder'}}" />
+    </div>
+
+    <div class="wow-pt-field full-width">
+      <label>{{localize "WOWPT.Config.Fields.styleType"}}</label>
+      <select name="styleType">
+        {{selectOptions styles selected=tracker.styleType localize=true}}
+      </select>
+    </div>
+
+    <!-- Numeric Values (3 columns) -->
+    <div class="wow-pt-three-cols full-width">
+      <div class="wow-pt-field">
+        <label>{{localize "WOWPT.Config.Fields.value"}}</label>
+        <input type="number" name="value" value="{{tracker.value}}" step="any" min="0" required />
+      </div>
+
+      <div class="wow-pt-field">
+        <label>{{localize "WOWPT.Config.Fields.max"}}</label>
+        <input type="number" name="max" value="{{tracker.max}}" step="any" min="1" required />
+      </div>
+
+      <div class="wow-pt-field">
+        <label>{{localize "WOWPT.Config.Fields.step"}}</label>
+        <input type="number" name="step" value="{{tracker.step}}" step="any" min="0.1" required />
+      </div>
+    </div>
+
+    <!-- Milestones Editor (Shown when styleType === "milestones") -->
+    <div class="wow-pt-field full-width wow-pt-milestones-group {{#unless isMilestonesStyle}}is-hidden{{/unless}}">
+      <div class="wow-pt-milestones-header">
+        <label>{{localize "WOWPT.Config.Fields.milestones"}}</label>
+        {{#if canAddMilestone}}
+          <button type="button" class="wow-pt-mini-add-btn" data-action="addMilestone">
+            <i class="fa-solid fa-plus"></i> {{localize "WOWPT.Config.Fields.addMilestone"}}
+          </button>
+        {{/if}}
+      </div>
+      <div class="wow-pt-milestones-list">
+        {{#each tracker.milestones as |ms idx|}}
+          <div class="wow-pt-milestone-row">
+            <div class="wow-pt-ms-val">
+              <span>{{localize "WOWPT.Config.Fields.milestoneValue"}}</span>
+              <input type="number" name="milestoneValue" value="{{ms.value}}" step="any" min="0" />
+            </div>
+            <div class="wow-pt-ms-icon wow-pt-file-row">
+              <input type="text" name="milestoneIcon" value="{{ms.icon}}" placeholder="fa-solid fa-flag or path/to/icon.webp" />
+              <button type="button" class="wow-pt-icon-btn" data-action="browseFile" title="{{localize 'WOWPT.Config.BrowseImage'}}">
+                <i class="fa-solid fa-folder-open"></i>
+              </button>
+              <button type="button" class="wow-pt-icon-btn danger" data-action="removeMilestone" data-index="{{idx}}" title="{{localize 'WOWPT.Config.Fields.removeMilestone'}}">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <!-- Colors -->
+    <div class="wow-pt-field">
+      <label>{{localize "WOWPT.Config.Fields.primaryColor"}}</label>
+      <div class="wow-pt-color-row">
+        <input type="color" value="{{tracker.primaryColor}}" data-color-target="primaryColor" />
+        <input type="text" name="primaryColor" value="{{tracker.primaryColor}}" />
+      </div>
+    </div>
+
+    <div class="wow-pt-field">
+      <label>{{localize "WOWPT.Config.Fields.secondaryColor"}}</label>
+      <div class="wow-pt-color-row">
+        <input type="color" value="{{tracker.secondaryColor}}" data-color-target="secondaryColor" />
+        <input type="text" name="secondaryColor" value="{{tracker.secondaryColor}}" />
+      </div>
+    </div>
+
+    <!-- Custom Icon / Image & Background Texture -->
+    <div class="wow-pt-field full-width">
+      <label>{{localize "WOWPT.Config.Fields.icon"}}</label>
+      <div class="wow-pt-file-row">
+        <input type="text" name="icon" value="{{tracker.icon}}" placeholder="{{localize 'WOWPT.Config.Fields.iconPlaceholder'}}" />
+        <button type="button" class="wow-pt-icon-btn" data-action="browseFile" data-target="icon" title="{{localize 'WOWPT.Config.BrowseImage'}}">
+          <i class="fa-solid fa-folder-open"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="wow-pt-field full-width">
+      <label>{{localize "WOWPT.Config.Fields.bgImage"}}</label>
+      <div class="wow-pt-file-row">
+        <input type="text" name="bgImage" value="{{tracker.bgImage}}" placeholder="path/to/texture.webp" />
+        <button type="button" class="wow-pt-icon-btn" data-action="browseFile" data-target="bgImage" title="{{localize 'WOWPT.Config.BrowseImage'}}">
+          <i class="fa-solid fa-image"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Checkboxes for Visibility & Player Options -->
+    <div class="wow-pt-field full-width wow-pt-checkbox-row">
+      <label>
+        <input type="checkbox" name="showToPlayers" {{#if tracker.showToPlayers}}checked{{/if}} />
+        {{localize "WOWPT.Config.Fields.showToPlayers"}}
+      </label>
+    </div>
+
+    <div class="wow-pt-field full-width wow-pt-checkbox-row">
+      <label>
+        <input type="checkbox" name="hideTitle" {{#if tracker.hideTitle}}checked{{/if}} />
+        {{localize "WOWPT.Config.Fields.hideTitle"}}
+      </label>
+    </div>
+
+    <div class="wow-pt-field full-width wow-pt-checkbox-row">
+      <label>
+        <input type="checkbox" name="allowPlayerEdit" {{#if tracker.allowPlayerEdit}}checked{{/if}} />
+        {{localize "WOWPT.Config.Fields.allowPlayerEdit"}}
+      </label>
+    </div>
+  </div>
+
+  <!-- Footer Actions -->
+  <footer class="wow-pt-config-footer">
+    <button type="button" class="wow-pt-btn secondary" data-action="cancel">
+      <i class="fa-solid fa-xmark"></i> {{localize "WOWPT.Config.Cancel"}}
+    </button>
+    <button type="submit" class="wow-pt-btn primary">
+      <i class="fa-solid fa-floppy-disk"></i> {{localize "WOWPT.Config.Save"}}
+    </button>
+  </footer>
+</div>

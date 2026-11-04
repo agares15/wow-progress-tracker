@@ -1,0 +1,331 @@
+{{#if isPlayerOverlay}}
+  {{#each trackers as |t|}}
+    <article
+      class="wow-pt-card style-{{t.styleType}}"
+      data-tracker-id="{{t.id}}"
+      style="--pt-primary: {{t.primaryColor}}; --pt-secondary: {{t.secondaryColor}}; --pt-pct: {{t.percentage}}%;"
+    >
+      <header class="wow-pt-card-header">
+        <div class="wow-pt-title-group">
+          {{#if t.icon}}
+            <span class="wow-pt-badge-icon">
+              {{#if t.isImageIcon}}
+                <img src="{{t.icon}}" alt="" />
+              {{else}}
+                <i class="{{t.icon}}"></i>
+              {{/if}}
+            </span>
+          {{/if}}
+          {{#if t.showTitle}}
+            <div class="wow-pt-titles">
+              <h4 class="wow-pt-title">{{t.title}}</h4>
+              {{#if t.description}}
+                <p class="wow-pt-subtitle">{{t.description}}</p>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+      </header>
+
+      <div class="wow-pt-bar-row {{#if t.isClock}}is-clock-row{{/if}}">
+        {{#if t.canEdit}}
+          <button type="button" class="wow-pt-step-btn" data-action="stepProgress" data-dir="-1" title="{{localize 'WOWPT.HUD.Decrement'}} (Shift x5)">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+        {{/if}}
+
+        <div class="wow-pt-visual-container">
+          {{!-- 1. Continuous Bar --}}
+          {{#if t.isContinuous}}
+            <div class="wow-pt-track-continuous" {{#if t.bgImage}}style="background-image: url('{{t.bgImage}}');"{{/if}}>
+              <div class="wow-pt-fill-continuous"></div>
+            </div>
+          {{/if}}
+
+          {{!-- 2. Milestone Bar --}}
+          {{#if t.isMilestones}}
+            <div class="wow-pt-track-milestones" {{#if t.bgImage}}style="background-image: url('{{t.bgImage}}');"{{/if}}>
+              <div class="wow-pt-track-continuous">
+                <div class="wow-pt-fill-continuous"></div>
+              </div>
+              {{#each t.renderedMilestones as |ms|}}
+                <div
+                  class="wow-pt-milestone-marker {{#if ms.reached}}is-reached{{/if}} {{#if t.canEdit}}is-clickable{{/if}}"
+                  style="left: {{ms.percentage}}%;"
+                  title="{{ms.value}}"
+                  {{#if t.canEdit}}data-action="setSegment" data-target-value="{{ms.value}}"{{/if}}
+                >
+                  {{#if ms.isImageIcon}}
+                    <img src="{{ms.icon}}" alt="" />
+                  {{else}}
+                    <i class="{{ms.icon}}"></i>
+                  {{/if}}
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+
+          {{!-- 3. Segmented --}}
+          {{#if t.isSegmented}}
+            <div class="wow-pt-track-segmented" style="--pt-segments: {{t.discreteCount}};">
+              {{#each t.segments as |seg|}}
+                <div
+                  class="wow-pt-segment {{#if seg.active}}is-active{{/if}} {{#if t.canEdit}}is-clickable{{/if}}"
+                  {{#if t.canEdit}}data-action="setSegment" data-target-value="{{seg.targetValue}}"{{/if}}
+                ></div>
+              {{/each}}
+            </div>
+          {{/if}}
+
+          {{!-- 4. Icon-Pips --}}
+          {{#if t.isIcons}}
+            <div class="wow-pt-track-icons">
+              {{#each t.segments as |seg|}}
+                <span
+                  class="wow-pt-pip {{#if seg.active}}is-active{{/if}} {{#if t.canEdit}}is-clickable{{/if}}"
+                  {{#if t.canEdit}}data-action="setSegment" data-target-value="{{seg.targetValue}}"{{/if}}
+                >
+                  {{#if t.isImageIcon}}
+                    <img src="{{t.icon}}" alt="" />
+                  {{else}}
+                    <i class="{{#if t.icon}}{{t.icon}}{{else}}fa-solid fa-circle{{/if}}"></i>
+                  {{/if}}
+                </span>
+              {{/each}}
+            </div>
+          {{/if}}
+
+          {{!-- 5. Tug-of-War --}}
+          {{#if t.isChase}}
+            <div class="wow-pt-track-chase" {{#if t.bgImage}}style="background-image: url('{{t.bgImage}}');"{{/if}}>
+              <div class="wow-pt-fill-chase"></div>
+              <div class="wow-pt-chase-marker" style="left: {{t.percentage}}%;">
+                {{#if t.isImageIcon}}
+                  <img src="{{t.icon}}" alt="" />
+                {{else}}
+                  <i class="{{#if t.icon}}{{t.icon}}{{else}}fa-solid fa-person-running{{/if}}"></i>
+                {{/if}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{!-- 6. Radial Clock (Crisp SVG slices) --}}
+          {{#if t.isClock}}
+            <div class="wow-pt-clock-wrap">
+              <svg class="wow-pt-clock-svg {{#if t.canEdit}}is-clickable{{/if}}" viewBox="0 0 100 100">
+                {{#each t.segments as |seg|}}
+                  <path
+                    class="wow-pt-clock-slice {{#if seg.active}}is-active{{/if}}"
+                    d="{{seg.svgPath}}"
+                    {{#if t.canEdit}}data-action="setSegment" data-target-value="{{seg.targetValue}}"{{/if}}
+                  />
+                {{/each}}
+                <circle class="wow-pt-clock-ring" cx="50" cy="50" r="46" />
+                <circle class="wow-pt-clock-hub" cx="50" cy="50" r="9" />
+              </svg>
+            </div>
+          {{/if}}
+        </div>
+
+        {{#if t.canEdit}}
+          <button type="button" class="wow-pt-step-btn" data-action="stepProgress" data-dir="1" title="{{localize 'WOWPT.HUD.Increment'}} (Shift x5)">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        {{/if}}
+      </div>
+    </article>
+  {{/each}}
+{{else}}
+  <div class="wow-pt-hud-wrapper">
+    <!-- Top Mini Toolbar -->
+    <div class="wow-pt-hud-toolbar">
+      <span class="wow-pt-hud-brand">
+        <i class="fa-solid fa-bars-progress"></i>
+        <span>{{localize "WOWPT.Title"}}</span>
+      </span>
+      <div class="wow-pt-hud-actions">
+        {{#if isGM}}
+          <button type="button" class="wow-pt-toolbar-btn" data-action="createTracker" title="{{localize 'WOWPT.HUD.NewTracker'}}">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        {{/if}}
+        <button type="button" class="wow-pt-toolbar-btn {{#if isLocked}}is-active{{/if}}" data-action="toggleLock" title="{{localize 'WOWPT.HUD.LockHUD'}}">
+          <i class="fa-solid {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trackers List -->
+    {{#if hasTrackers}}
+      <div class="wow-pt-list">
+        {{#each trackers as |t|}}
+          <article
+            class="wow-pt-card style-{{t.styleType}} {{#unless t.showToPlayers}}vis-hidden{{/unless}}"
+            data-tracker-id="{{t.id}}"
+            style="--pt-primary: {{t.primaryColor}}; --pt-secondary: {{t.secondaryColor}}; --pt-pct: {{t.percentage}}%;"
+          >
+            <!-- Card Header -->
+            <header class="wow-pt-card-header">
+              <div class="wow-pt-title-group">
+                {{#if t.icon}}
+                  <span class="wow-pt-badge-icon">
+                    {{#if t.isImageIcon}}
+                      <img src="{{t.icon}}" alt="" />
+                    {{else}}
+                      <i class="{{t.icon}}"></i>
+                    {{/if}}
+                  </span>
+                {{/if}}
+                {{#if t.showTitle}}
+                  <div class="wow-pt-titles">
+                    <h4 class="wow-pt-title">{{t.title}}</h4>
+                    {{#if t.description}}
+                      <p class="wow-pt-subtitle">{{t.description}}</p>
+                    {{/if}}
+                  </div>
+                {{/if}}
+              </div>
+
+              {{#if ../isGM}}
+                <div class="wow-pt-meta-right">
+                  <span class="wow-pt-value-badge">{{t.formattedValue}}</span>
+
+                  <div class="wow-pt-gm-tools">
+                    <button type="button" class="wow-pt-mini-btn vis-btn" data-action="cycleVisibility" title="{{t.visLabel}}">
+                      <i class="{{t.visIcon}}"></i>
+                    </button>
+                    <button type="button" class="wow-pt-mini-btn" data-action="sendToChat" title="{{localize 'WOWPT.HUD.SendToChat'}}">
+                      <i class="fa-solid fa-comment-dots"></i>
+                    </button>
+                    <button type="button" class="wow-pt-mini-btn" data-action="editTracker" title="{{localize 'WOWPT.HUD.Edit'}}">
+                      <i class="fa-solid fa-gear"></i>
+                    </button>
+                    <button type="button" class="wow-pt-mini-btn danger" data-action="deleteTracker" title="{{localize 'WOWPT.HUD.Delete'}}">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              {{/if}}
+            </header>
+
+            <!-- Visual Progress Body + Quick Step Buttons -->
+            <div class="wow-pt-bar-row {{#if t.isClock}}is-clock-row{{/if}}">
+              {{#if t.canEdit}}
+                <button type="button" class="wow-pt-step-btn" data-action="stepProgress" data-dir="-1" title="{{localize 'WOWPT.HUD.Decrement'}} (Shift x5)">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+              {{/if}}
+
+              <div class="wow-pt-visual-container">
+                {{!-- 1. Continuous Bar --}}
+                {{#if t.isContinuous}}
+                  <div class="wow-pt-track-continuous" {{#if t.bgImage}}style="background-image: url('{{t.bgImage}}');"{{/if}}>
+                    <div class="wow-pt-fill-continuous"></div>
+                  </div>
+                {{/if}}
+
+                {{!-- 2. Milestone Bar --}}
+                {{#if t.isMilestones}}
+                  <div class="wow-pt-track-milestones" {{#if t.bgImage}}style="background-image: url('{{t.bgImage}}');"{{/if}}>
+                    <div class="wow-pt-track-continuous">
+                      <div class="wow-pt-fill-continuous"></div>
+                    </div>
+                    {{#each t.renderedMilestones as |ms|}}
+                      <div
+                        class="wow-pt-milestone-marker {{#if ms.reached}}is-reached{{/if}} {{#if t.canEdit}}is-clickable{{/if}}"
+                        style="left: {{ms.percentage}}%;"
+                        title="{{ms.value}}"
+                        {{#if t.canEdit}}data-action="setSegment" data-target-value="{{ms.value}}"{{/if}}
+                      >
+                        {{#if ms.isImageIcon}}
+                          <img src="{{ms.icon}}" alt="" />
+                        {{else}}
+                          <i class="{{ms.icon}}"></i>
+                        {{/if}}
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/if}}
+
+                {{!-- 3. Segmented --}}
+                {{#if t.isSegmented}}
+                  <div class="wow-pt-track-segmented" style="--pt-segments: {{t.discreteCount}};">
+                    {{#each t.segments as |seg|}}
+                      <div
+                        class="wow-pt-segment {{#if seg.active}}is-active{{/if}} {{#if t.canEdit}}is-clickable{{/if}}"
+                        {{#if t.canEdit}}data-action="setSegment" data-target-value="{{seg.targetValue}}"{{/if}}
+                      ></div>
+                    {{/each}}
+                  </div>
+                {{/if}}
+
+                {{!-- 4. Icon-Pips --}}
+                {{#if t.isIcons}}
+                  <div class="wow-pt-track-icons">
+                    {{#each t.segments as |seg|}}
+                      <span
+                        class="wow-pt-pip {{#if seg.active}}is-active{{/if}} {{#if t.canEdit}}is-clickable{{/if}}"
+                        {{#if t.canEdit}}data-action="setSegment" data-target-value="{{seg.targetValue}}"{{/if}}
+                      >
+                        {{#if t.isImageIcon}}
+                          <img src="{{t.icon}}" alt="" />
+                        {{else}}
+                          <i class="{{#if t.icon}}{{t.icon}}{{else}}fa-solid fa-circle{{/if}}"></i>
+                        {{/if}}
+                      </span>
+                    {{/each}}
+                  </div>
+                {{/if}}
+
+                {{!-- 5. Tug-of-War --}}
+                {{#if t.isChase}}
+                  <div class="wow-pt-track-chase" {{#if t.bgImage}}style="background-image: url('{{t.bgImage}}');"{{/if}}>
+                    <div class="wow-pt-fill-chase"></div>
+                    <div class="wow-pt-chase-marker" style="left: {{t.percentage}}%;">
+                      {{#if t.isImageIcon}}
+                        <img src="{{t.icon}}" alt="" />
+                      {{else}}
+                        <i class="{{#if t.icon}}{{t.icon}}{{else}}fa-solid fa-person-running{{/if}}"></i>
+                      {{/if}}
+                    </div>
+                  </div>
+                {{/if}}
+
+                {{!-- 6. Radial Clock (Crisp SVG slices) --}}
+                {{#if t.isClock}}
+                  <div class="wow-pt-clock-wrap">
+                    <svg class="wow-pt-clock-svg {{#if t.canEdit}}is-clickable{{/if}}" viewBox="0 0 100 100">
+                      {{#each t.segments as |seg|}}
+                        <path
+                          class="wow-pt-clock-slice {{#if seg.active}}is-active{{/if}}"
+                          d="{{seg.svgPath}}"
+                          {{#if t.canEdit}}data-action="setSegment" data-target-value="{{seg.targetValue}}"{{/if}}
+                        />
+                      {{/each}}
+                      <circle class="wow-pt-clock-ring" cx="50" cy="50" r="46" />
+                      <circle class="wow-pt-clock-hub" cx="50" cy="50" r="9" />
+                    </svg>
+                  </div>
+                {{/if}}
+              </div>
+
+              {{#if t.canEdit}}
+                <button type="button" class="wow-pt-step-btn" data-action="stepProgress" data-dir="1" title="{{localize 'WOWPT.HUD.Increment'}} (Shift x5)">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              {{/if}}
+            </div>
+          </article>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="wow-pt-empty">
+        {{#if isGM}}
+          <p>{{localize "WOWPT.HUD.EmptyGM"}}</p>
+        {{else}}
+          <p>{{localize "WOWPT.HUD.EmptyPlayer"}}</p>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}

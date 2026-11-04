@@ -1,0 +1,71 @@
+{
+  "WOWPT": {
+    "Title": "Progress Tracker",
+    "ControlBtn": "Mostrar/Ocultar Progress Tracker HUD",
+    "HUD": {
+      "EmptyGM": "No hay barras de progreso aún. Haz clic en '+' para crear una.",
+      "EmptyPlayer": "No hay barras de progreso visibles actualmente.",
+      "NewTracker": "Crear Barra de Progreso",
+      "LockHUD": "Alternar Modo Minimalista / Sin Bordes",
+      "CollapseHUD": "Contraer / Expandir",
+      "Increment": "Aumentar Progreso",
+      "Decrement": "Disminuir Progreso",
+      "SendToChat": "Enviar Progreso al Chat",
+      "Edit": "Configurar Barra",
+      "Delete": "Eliminar Barra",
+      "ConfirmDeleteTitle": "Eliminar Barra de Progreso",
+      "ConfirmDeleteContent": "¿Estás seguro de que deseas eliminar \"{title}\"?",
+      "ToggleVisibility": "Alternar Visibilidad para Jugadores (Mostrar / Ocultar)",
+      "HiddenValue": "???",
+      "Visibility": {
+        "shown": "Visible para los Jugadores",
+        "hidden": "Oculto a los Jugadores (Solo GM)"
+      }
+    },
+    "Config": {
+      "CreateTitle": "Crear Barra de Progreso",
+      "EditTitle": "Editar Barra: {title}",
+      "Fields": {
+        "title": "Título",
+        "titlePlaceholder": "Ej. Huida por los tejados, Ritual arcano...",
+        "description": "Subtítulo / Nota de Meta",
+        "descriptionPlaceholder": "Consecuencia o detalle opcional...",
+        "styleType": "Visual Bar Type",
+        "value": "Progreso Actual",
+        "max": "Meta / Valor Máximo",
+        "step": "Incremento por Clic (Paso)",
+        "primaryColor": "Color Principal",
+        "secondaryColor": "Color Secundario / Fondo",
+        "icon": "Icon / Image Path",
+        "iconPlaceholder": "fa-solid fa-bolt o ruta/a/icono.webp",
+        "bgImage": "Custom Bar Texture / Image",
+        "showToPlayers": "Mostrar Barra de Progreso a los Jugadores",
+        "hideTitle": "Ocultar Título a los Jugadores",
+        "hideNumbers": "Ocultar Números Exactos a los Jugadores (? / ?)",
+        "allowPlayerEdit": "Permitir a los Jugadores Modificar el Progreso (+/-)",
+        "milestones": "Milestones / Hitos (Máx. 10)",
+        "milestoneValue": "En Valor",
+        "milestoneIcon": "Icono / Imagen",
+        "addMilestone": "Agregar Milestone",
+        "removeMilestone": "Eliminar Milestone"
+      },
+      "Styles": {
+        "continuous": "Continuous Bar",
+        "milestones": "Milestone Bar",
+        "segmented": "Segmented",
+        "icons": "Icon-Pips",
+        "chase": "Tug-of-War",
+        "clock": "Radial Clock"
+      },
+      "Save": "Guardar Barra",
+      "Cancel": "Cancelar",
+      "BrowseImage": "Explorar Archivos"
+    },
+    "Settings": {
+      "AutoOpen": {
+        "Name": "Abrir HUD Automáticamente al Iniciar (GM)",
+        "Hint": "Muestra automáticamente la ventana del Progress Tracker al GM cuando existen barras creadas."
+      }
+    }
+  }
+}

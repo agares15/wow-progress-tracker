@@ -1,0 +1,71 @@
+{
+  "WOWPT": {
+    "Title": "Progress Tracker",
+    "ControlBtn": "Toggle Progress Tracker HUD",
+    "HUD": {
+      "EmptyGM": "No progress trackers yet. Click '+' to create one.",
+      "EmptyPlayer": "No active progress trackers visible.",
+      "NewTracker": "New Progress Tracker",
+      "LockHUD": "Toggle Frameless / Lock Mode",
+      "CollapseHUD": "Collapse / Expand",
+      "Increment": "Increase Progress",
+      "Decrement": "Decrease Progress",
+      "SendToChat": "Post Progress to Chat",
+      "Edit": "Configure Tracker",
+      "Delete": "Delete Tracker",
+      "ConfirmDeleteTitle": "Delete Progress Tracker",
+      "ConfirmDeleteContent": "Are you sure you want to delete \"{title}\"?",
+      "ToggleVisibility": "Toggle Player Visibility (Show / Hide)",
+      "HiddenValue": "???",
+      "Visibility": {
+        "shown": "Visible to Players",
+        "hidden": "Hidden from Players (GM Only)"
+      }
+    },
+    "Config": {
+      "CreateTitle": "Create Progress Tracker",
+      "EditTitle": "Edit Progress Tracker: {title}",
+      "Fields": {
+        "title": "Title",
+        "titlePlaceholder": "e.g., Rooftop Chase, Ritual Progress...",
+        "description": "Subtitle / Objective Note",
+        "descriptionPlaceholder": "Optional hint or consequence...",
+        "styleType": "Visual Bar Type",
+        "value": "Current Progress",
+        "max": "Maximum / Target",
+        "step": "Step Increment",
+        "primaryColor": "Primary Fill Color",
+        "secondaryColor": "Secondary / Background Color",
+        "icon": "Icon / Image Path",
+        "iconPlaceholder": "fa-solid fa-bolt or path/to/icon.webp",
+        "bgImage": "Custom Bar Texture / Image",
+        "showToPlayers": "Show Progress Bar to Players",
+        "hideTitle": "Hide Title from Players",
+        "hideNumbers": "Hide Exact Numbers from Players (? / ?)",
+        "allowPlayerEdit": "Allow Players to Adjust Progress (+/-)",
+        "milestones": "Milestones (Max 10)",
+        "milestoneValue": "At Value",
+        "milestoneIcon": "Icon / Image",
+        "addMilestone": "Add Milestone",
+        "removeMilestone": "Remove Milestone"
+      },
+      "Styles": {
+        "continuous": "Continuous Bar",
+        "milestones": "Milestone Bar",
+        "segmented": "Segmented",
+        "icons": "Icon-Pips",
+        "chase": "Tug-of-War",
+        "clock": "Radial Clock"
+      },
+      "Save": "Save Tracker",
+      "Cancel": "Cancel",
+      "BrowseImage": "Browse Files"
+    },
+    "Settings": {
+      "AutoOpen": {
+        "Name": "Auto-Open Tracker HUD on Ready (GM)",
+        "Hint": "Automatically display the GM Progress Tracker window when joining the world if trackers exist."
+      }
+    }
+  }
+}

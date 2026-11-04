@@ -1,0 +1,41 @@
+{
+  "id": "wow-progress-tracker",
+  "title": "WoW Progress Tracker",
+  "description": "A lightweight, highly customizable, system-agnostic progress tracker for Foundry VTT v14. Track checks, chases, distances, goals, clocks, and item collections with granular player visibility controls.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14",
+    "maximum": "14"
+  },
+  "authors": [
+    {
+      "name": "WoW Progress Tracker Author",
+      "flags": {}
+    }
+  ],
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/progress-tracker.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json",
+      "flags": {}
+    },
+    {
+      "lang": "es",
+      "name": "Español",
+      "path": "lang/es.json",
+      "flags": {}
+    }
+  ],
+  "socket": true,
+  "url": "https://github.com/agare/wow-progress-tracker",
+  "manifest": "https://raw.githubusercontent.com/agare/wow-progress-tracker/main/module.json",
+  "download": "https://github.com/agare/wow-progress-tracker/releases/latest/download/module.zip"
+}
