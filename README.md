@@ -14,11 +14,11 @@ https://github.com/agares15/wow-progress-tracker/releases/download/v1.0/module.j
 
 - **6 Visual Bar Types**:
   - **Continuous Bar**: Smooth progress bar ideal for distances, journeys, or percentage goals. Supports custom background textures.
-  - **Milestone Bar**: Continuous bar with up to **10 customizable milestones** placed at any value along the progress track, each with its own FontAwesome icon or custom image that lights up when reached.
+  - **Milestone Bar**: Continuous bar with up to **10 customizable milestones** placed at any value along the progress track, each with its own icon or custom image that lights up when reached.
   - **Segmented**: Discrete blocks ideal for skill checks, trials, or stages. Click directly on any segment to fill or clear it.
-  - **Icon-Pips**: Displays a row of FontAwesome icons or custom images that light up as progress advances (great for item collections, keys, or tokens).
+  - **Icon-Pips**: Displays a row of icons or custom images that light up as progress advances (great for item collections, keys, or tokens).
   - **Tug-of-War**: Dual-color contested bar with a moving marker icon for chases or opposing forces.
-  - **Radial Clock**: Crisp SVG pie-slice clock ideal for tension clocks or timed events.
+  - **Radial Clock**: SVG pie-slice clock ideal for tension clocks or timed events.
      
 - **Granular GM Control**:
   - **Show / Hide to Players**: Toggle player visibility with a single click from the GM HUD or configuration form.
