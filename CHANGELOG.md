@@ -5,6 +5,9 @@ All notable changes to **WoW Progress Tracker** are documented in this file.
 ## [1.1.0] - 2026-11-15
 
 ### Added
+- **Draggable & Resizable Player HUD**:
+  - Players can now freely reposition (drag via the hover toolbar) and resize the simplified frameless tracker HUD, with their custom position and dimensions automatically saved per client (`hudPosition`).
+  - Removed window blur and enforced `overflow: visible` on the simplified HUD so bar glows and markers are never clipped.
 - **Output Automations / Triggers (`AutomationRunner`)**:
   - Added support for triggering automated actions when a tracker reaches **Max (`onComplete`)**, drops to **Zero (`onZero`)**, crosses a **Milestone (`onMilestone`)**, or changes **On Every Step (`onStep`)**.
   - Added 8 built-in automation actions:
@@ -23,15 +26,17 @@ All notable changes to **WoW Progress Tracker** are documented in this file.
     - **On Every Combat Turn (`combatTurn`)**: Advances on every turn change in an active Combat encounter.
     - **Real-Time Timer (`timer`)**: Advances every $X$ real-time seconds while the game is unpaused.
     - **In-Game World Time (`worldTime`)**: Advances every $X$ seconds of in-game World Time (compatible with *Simple Calendar*).
+- **Enhanced Chat Cards & Compatibility**:
+  - Chat cards now render the exact visual style of each tracker (Continuous, Milestones, Segmented, Icon-Pips, Tug-of-War, and SVG Radial Clock) along with its custom icon and title.
+  - Extended minimum compatibility to Foundry VTT v12 (`v12` – `v14`).
 
 ---
 
-## [1.0.0] - 2026-11-14
+## [1.0.0] - 2026-11-04
 
 ### Added
-- Initial release of **WoW Progress Tracker** (compatible with Foundry VTT v12, v13, and v14).
+- Initial release of **WoW Progress Tracker** (for Foundry VTT v13 and v14).
 - **6 Visual Bar Types**: Continuous Bar, Milestone Bar (up to 10 customizable icon/image milestones), Segmented, Icon-Pips, Tug-of-War, and SVG Radial Clock.
-- **Draggable & Resizable HUD**: Supports repositioning and resizing for both GM and Players with per-client position persistence and frameless mode.
+- **GM HUD & Frameless Player Overlay**: Dedicated GM management HUD and floating top-right player display.
 - **Granular Visibility**: Toggle player visibility, hide tracker titles from players, and optionally allow player progress adjustments.
-- **Rich Chat Cards**: Post any progress bar's visual state (including segments, icons, milestones, or radial slices) to the Chat.
 - **Macro API**: Exposed `WoWProgressTracker` global API for scripting and macros.
