@@ -1,16 +1,15 @@
 import { MODULE_ID, ProgressTrackerModel } from "./models/tracker-model.js";
 import { TrackerStore } from "./store/tracker-store.js";
-import { TrackerHUDApp, PlayerOverlay } from "./apps/tracker-hud.js";
+import { AutomationRunner } from "./store/automation-runner.js";
+import { TrackerHUDApp } from "./apps/tracker-hud.js";
 import { TrackerConfigApp } from "./apps/tracker-config.js";
 
 /**
  * Public API for Macros and third-party modules.
  */
 const PublicAPI = {
-  openHUD: () => TrackerHUDApp.toggle(),
-  closeHUD: () => {
-    if (game.user?.isGM) TrackerHUDApp.instance.close();
-  },
+  openHUD: () => TrackerHUDApp.instance.render(true),
+  closeHUD: () => TrackerHUDApp.instance.close(),
   toggleHUD: () => TrackerHUDApp.toggle(),
   openConfig: (trackerData = {}) => new TrackerConfigApp(trackerData).render(true),
   getAll: () => TrackerStore.getAll(),
@@ -51,30 +50,19 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   TrackerStore.registerSocket();
-
-  if (!game.user.isGM) {
-    // Players always see visible progress bar cards floating at top-right next to the right sidebar
-    PlayerOverlay.render();
-    return;
-  }
-
-  if (game.settings.get(MODULE_ID, "autoOpenHUD")) {
-    const visible = TrackerStore.getVisibleForUser(game.user);
-    if (visible.length > 0) {
-      TrackerHUDApp.instance.render(true);
-    }
-  }
+  AutomationRunner.registerInputHooks(TrackerStore);
+  TrackerHUDApp.refresh();
 });
 
 /**
- * Adds a quick-access button to the Scene Controls toolbar for the GM (compatible with Foundry v13 & v14).
+ * Adds a quick-access button to the Scene Controls toolbar for GM and Players (compatible with Foundry v12, v13 & v14).
  */
 Hooks.on("getSceneControlButtons", (controls) => {
   const toolConfig = {
     name: "wowProgressTracker",
     title: "WOWPT.ControlBtn",
     icon: "fa-solid fa-bars-progress",
-    visible: game.user?.isGM ?? true,
+    visible: true,
     button: true,
     onChange: () => TrackerHUDApp.toggle(),
     onClick: () => TrackerHUDApp.toggle()
@@ -96,7 +84,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     return;
   }
 
-  // Fallback if `controls` is an Array
+  // Fallback if `controls` is an Array (v12)
   if (Array.isArray(controls)) {
     const tokenGroup = controls.find((c) => c.name === "token" || c.name === "tokens");
     if (tokenGroup && Array.isArray(tokenGroup.tools)) {

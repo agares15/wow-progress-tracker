@@ -47,7 +47,67 @@
         "milestoneValue": "At Value",
         "milestoneIcon": "Icon / Image",
         "addMilestone": "Add Milestone",
-        "removeMilestone": "Remove Milestone"
+        "removeMilestone": "Remove Milestone",
+        "automations": "Output Automations / Triggers",
+        "addAutomation": "Add Automation",
+        "removeAutomation": "Remove Automation",
+        "selectMacro": "-- Select a Macro --",
+        "selectTable": "-- Select a RollTable --",
+        "selectTracker": "-- Select a Tracker --",
+        "soundPlaceholder": "path/to/sound.ogg",
+        "visibilityPlaceholder": "Select Token/Tile on canvas and click crosshair ->",
+        "chatPlaceholder": "Message to send to chat...",
+        "pickCanvasTarget": "Use Selected Canvas Token / Tile",
+        "browseAudio": "Browse Audio File"
+      },
+      "Triggers": {
+        "onComplete": "On Complete (Reaches Max)",
+        "onZero": "On Zero (Drops to 0)",
+        "onMilestone": "On Milestone Reached",
+        "onStep": "On Every Step (+/-)"
+      },
+      "Actions": {
+        "macro": "Run Macro",
+        "sound": "Play Sound",
+        "visibility": "Toggle Token / Tile Visibility",
+        "pause": "Pause Game",
+        "rollTable": "Roll on RollTable",
+        "chat": "Post Custom Chat Message",
+        "chainTracker": "Reveal Tracker to Players",
+        "advanceTracker": "Advance Another Tracker (+1 Step)"
+      },
+      "ActionHints": {
+        "macro": "Executes the selected Macro and passes { tracker, prevValue, value, max, trigger } to it.",
+        "sound": "Plays an audio file for all connected players. Click the music icon to browse audio files.",
+        "visibility": "Reveals or hides Tokens/Tiles on the current scene. Select them on the canvas and click the crosshair button.",
+        "pause": "Automatically pauses the game when this condition is triggered.",
+        "rollTable": "Draws a result from the selected RollTable and posts it to the chat.",
+        "chat": "Posts the custom text message below to the chat.",
+        "chainTracker": "Makes another hidden Progress Tracker visible to players (ideal for multi-phase events).",
+        "advanceTracker": "Increases the selected Progress Tracker by its configured step (+1 step)."
+      },
+      "InputTriggers": {
+        "Title": "Input Trigger (Auto-Advance)",
+        "Direction": "Direction",
+        "IntervalSeconds": "Interval (Seconds)",
+        "Modes": {
+          "none": "Manual Only (No Auto-Advance)",
+          "combatRound": "On Every Combat Round",
+          "combatTurn": "On Every Combat Turn",
+          "timer": "Real-Time Timer (Every X Seconds)",
+          "worldTime": "In-Game World Time (Every X Seconds)"
+        },
+        "Directions": {
+          "1": "Increase (+ Step)",
+          "-1": "Decrease (- Step)"
+        },
+        "Hints": {
+          "none": "The tracker only changes when clicked manually or modified via Macro.",
+          "combatRound": "Automatically advances by 1 step at the start of every new Round in an active Combat encounter.",
+          "combatTurn": "Automatically advances by 1 step on every Turn change in an active Combat encounter.",
+          "timer": "Automatically advances by 1 step every X real-time seconds while the game is unpaused.",
+          "worldTime": "Automatically advances by 1 step every X seconds of in-game World Time (compatible with Simple Calendar)."
+        }
       },
       "Styles": {
         "continuous": "Continuous Bar",

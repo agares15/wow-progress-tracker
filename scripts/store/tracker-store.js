@@ -1,4 +1,5 @@
 import { MODULE_ID, ProgressTrackerModel } from "../models/tracker-model.js";
+import { AutomationRunner } from "./automation-runner.js";
 
 const SETTING_TRACKERS = "trackers";
 
@@ -132,9 +133,11 @@ export class TrackerStore {
     const all = this.getAll();
     const index = data.id ? all.findIndex((t) => t.id === data.id) : -1;
 
+    let prevTracker = null;
     let model;
     if (index >= 0) {
-      const merged = foundry.utils.mergeObject(all[index].toObject(), data, { inplace: false });
+      prevTracker = all[index];
+      const merged = foundry.utils.mergeObject(prevTracker.toObject(), data, { inplace: false });
       model = new ProgressTrackerModel(merged);
       all[index] = model;
     } else {
@@ -143,6 +146,9 @@ export class TrackerStore {
     }
 
     await this.saveAll(all);
+    if (prevTracker) {
+      await AutomationRunner.evaluate(prevTracker, model, this);
+    }
     return model;
   }
 

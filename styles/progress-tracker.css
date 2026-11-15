@@ -15,56 +15,51 @@
 }
 
 /* ==========================================================================
-   Player Top-Right Floating Overlay (Relative next to #sidebar, uncloseable)
+   Frameless / Overlay Lock Mode & Resizable HUD for GM and Players
    ========================================================================== */
-.wow-pt-player-overlay {
-  position: relative;
-  align-self: flex-end;
-  margin-left: auto;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-  margin-top: 10px;
-  margin-right: 6px;
-  padding: 0;
+.wow-pt-hud {
+  min-width: 200px;
+  min-height: 70px;
+}
+
+.wow-pt-hud.is-frameless,
+.wow-pt-hud.is-frameless::before,
+.wow-pt-hud.is-frameless::after {
   background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
   border: none !important;
   box-shadow: none !important;
-  pointer-events: none;
-  z-index: 60;
-  max-height: calc(100vh - 24px);
-  overflow-y: auto;
-}
-
-.wow-pt-player-overlay:empty {
-  display: none;
-  margin: 0;
-}
-
-.wow-pt-player-overlay .wow-pt-card {
-  width: 280px;
-  pointer-events: auto;
-}
-
-/* ==========================================================================
-   Frameless / Overlay Lock Mode for GM HUD
-   ========================================================================== */
-.wow-pt-hud.is-frameless {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  outline: none !important;
   backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
 }
 
-.wow-pt-hud.is-frameless>.window-header {
+.wow-pt-hud.is-frameless > .window-header {
   display: none !important;
 }
 
 .wow-pt-hud.is-frameless .window-content {
   background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  border: none !important;
   padding: 0 !important;
+  overflow: visible !important;
+}
+
+/* Auto-fade the mini toolbar in frameless mode unless hovering */
+.wow-pt-hud.is-frameless .wow-pt-hud-toolbar {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.wow-pt-hud.is-frameless:hover .wow-pt-hud-toolbar {
+  opacity: 1;
 }
 
 /* HUD Wrapper & Mini Toolbar */
@@ -74,6 +69,7 @@
   gap: 10px;
   color: var(--pt-text);
   font-size: 13px;
+  height: 100%;
 }
 
 .wow-pt-hud-toolbar {
@@ -81,9 +77,20 @@
   align-items: center;
   justify-content: space-between;
   padding: 4px 8px;
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(15, 23, 42, 0.78);
   border: 1px solid var(--pt-border);
   border-radius: 6px;
+  cursor: grab;
+  user-select: none;
+}
+
+.wow-pt-hud-toolbar:active {
+  cursor: grabbing;
+}
+
+.wow-pt-drag-icon {
+  opacity: 0.55;
+  margin-right: 2px;
 }
 
 .wow-pt-hud-brand {
@@ -143,8 +150,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 12px;
-  max-height: 70vh;
-  overflow-y: auto;
+  overflow: visible !important;
   padding-right: 2px;
 }
 
@@ -159,6 +165,8 @@
   border: none !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
   color: var(--pt-text);
   text-align: left;
 }
@@ -722,6 +730,72 @@
   width: 58px;
 }
 
+/* Output Automations & Input Triggers Editor in Config */
+.wow-pt-input-trigger-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--pt-border);
+  border-radius: 6px;
+}
+
+.wow-pt-input-trigger-sub {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.wow-pt-automations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--pt-border);
+  border-radius: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.wow-pt-automation-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.wow-pt-automation-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.wow-pt-auto-selects {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.wow-pt-auto-target-row select {
+  flex: 1;
+}
+
+.wow-pt-auto-hint {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--pt-text-muted);
+  padding: 2px 4px;
+}
+
+.wow-pt-auto-hint i {
+  color: var(--pt-accent);
+  margin-right: 3px;
+}
+
 .wow-pt-checkbox-row label {
   display: flex;
   align-items: center;
@@ -761,42 +835,27 @@
 
 /* Chat Card Output */
 .wow-pt-chat-card {
-  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
   border-radius: 6px;
   background: #1e293b;
   color: #f8fafc;
   border-left: 4px solid var(--pt-primary, #3b82f6);
+  overflow: visible;
 }
 
-.wow-pt-chat-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
+.wow-pt-chat-card .wow-pt-card-header {
+  justify-content: flex-start;
 }
 
-.wow-pt-chat-val {
-  font-size: 11px;
-  padding: 1px 5px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.35);
+.wow-pt-chat-card.style-clock .wow-pt-card-header {
+  justify-content: flex-end;
 }
 
-.wow-pt-chat-desc {
-  margin: 0 0 6px;
-  font-size: 12px;
-  color: #cbd5e1;
-}
-
-.wow-pt-chat-bar {
-  height: 10px;
-  border-radius: 999px;
-  background: var(--pt-secondary, #0f172a);
-  overflow: hidden;
-}
-
-.wow-pt-chat-fill {
-  height: 100%;
-  width: var(--pt-pct, 0%);
-  background: var(--pt-primary, #3b82f6);
+.wow-pt-chat-card.style-clock .wow-pt-title-group {
+  justify-content: flex-end;
+  margin-left: auto;
+  text-align: right;
 }

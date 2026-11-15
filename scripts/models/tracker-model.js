@@ -123,7 +123,55 @@ export class ProgressTrackerModel extends foundry.abstract.DataModel {
       allowPlayerEdit: new fields.BooleanField({
         required: true,
         initial: false
-      })
+      }),
+      autoAdvanceMode: new fields.StringField({
+        required: true,
+        choices: ["none", "combatRound", "combatTurn", "timer", "worldTime"],
+        initial: "none"
+      }),
+      autoAdvanceDir: new fields.NumberField({
+        required: true,
+        nullable: false,
+        initial: 1
+      }),
+      autoAdvanceInterval: new fields.NumberField({
+        required: true,
+        nullable: false,
+        positive: true,
+        initial: 60
+      }),
+      automations: new fields.ArrayField(
+        new fields.SchemaField({
+          trigger: new fields.StringField({
+            required: true,
+            choices: ["onComplete", "onZero", "onMilestone", "onStep"],
+            initial: "onComplete"
+          }),
+          action: new fields.StringField({
+            required: true,
+            choices: [
+              "macro",
+              "sound",
+              "visibility",
+              "pause",
+              "rollTable",
+              "chat",
+              "chainTracker",
+              "advanceTracker"
+            ],
+            initial: "macro"
+          }),
+          target: new fields.StringField({
+            required: false,
+            blank: true,
+            initial: ""
+          })
+        }),
+        {
+          required: true,
+          initial: () => []
+        }
+      )
     };
   }
 

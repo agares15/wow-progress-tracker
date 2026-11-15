@@ -104,6 +104,142 @@
       </div>
     </div>
 
+    <!-- Input Trigger (Auto-Advance) -->
+    <div class="wow-pt-field full-width wow-pt-input-trigger-group">
+      <label><i class="fa-solid fa-clock-rotate-left"></i> {{localize "WOWPT.Config.InputTriggers.Title"}}</label>
+      <div class="wow-pt-input-trigger-box">
+        <select name="autoAdvanceMode">
+          {{selectOptions inputTriggerModes selected=tracker.autoAdvanceMode localize=true}}
+        </select>
+
+        {{#if hasAutoAdvance}}
+          <div class="wow-pt-input-trigger-sub">
+            <div class="wow-pt-field">
+              <label>{{localize "WOWPT.Config.InputTriggers.Direction"}}</label>
+              <select name="autoAdvanceDir">
+                {{selectOptions inputTriggerDirs selected=autoAdvanceDirStr localize=true}}
+              </select>
+            </div>
+
+            {{#if needsAdvanceInterval}}
+              <div class="wow-pt-field">
+                <label>{{localize "WOWPT.Config.InputTriggers.IntervalSeconds"}}</label>
+                <input type="number" name="autoAdvanceInterval" value="{{tracker.autoAdvanceInterval}}" min="1" step="1" />
+              </div>
+            {{/if}}
+          </div>
+        {{/if}}
+
+        <p class="wow-pt-auto-hint">
+          <i class="fa-solid fa-circle-info"></i> {{localize autoAdvanceHintKey}}
+        </p>
+      </div>
+    </div>
+
+    <!-- Output Automations / Triggers Editor -->
+    <div class="wow-pt-field full-width wow-pt-automations-group">
+      <div class="wow-pt-milestones-header">
+        <label><i class="fa-solid fa-bolt"></i> {{localize "WOWPT.Config.Fields.automations"}}</label>
+        <button type="button" class="wow-pt-mini-add-btn" data-action="addAutomation">
+          <i class="fa-solid fa-plus"></i> {{localize "WOWPT.Config.Fields.addAutomation"}}
+        </button>
+      </div>
+      {{#if tracker.automations.length}}
+        <div class="wow-pt-automations-list">
+          {{#each tracker.automations as |auto idx|}}
+            <div class="wow-pt-automation-row">
+              <div class="wow-pt-auto-selects">
+                <select name="autoTrigger">
+                  {{selectOptions ../triggerChoices selected=auto.trigger localize=true}}
+                </select>
+                <select name="autoAction">
+                  {{selectOptions ../actionChoices selected=auto.action localize=true}}
+                </select>
+                <button
+                  type="button"
+                  class="wow-pt-icon-btn danger"
+                  data-action="removeAutomation"
+                  data-index="{{idx}}"
+                  title="{{localize 'WOWPT.Config.Fields.removeAutomation'}}"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+
+              <p class="wow-pt-auto-hint">
+                <i class="fa-solid fa-circle-info"></i> {{localize auto.hintKey}}
+              </p>
+
+              {{#unless auto.isPause}}
+                <div class="wow-pt-auto-target-row wow-pt-file-row">
+                  {{#if auto.isMacro}}
+                    <select name="autoTarget">
+                      {{selectOptions ../macroOptions selected=auto.target}}
+                    </select>
+                  {{/if}}
+
+                  {{#if auto.isRollTable}}
+                    <select name="autoTarget">
+                      {{selectOptions ../tableOptions selected=auto.target}}
+                    </select>
+                  {{/if}}
+
+                  {{#if auto.isTrackerTarget}}
+                    <select name="autoTarget">
+                      {{selectOptions ../trackerOptions selected=auto.target}}
+                    </select>
+                  {{/if}}
+
+                  {{#if auto.isSound}}
+                    <input
+                      type="text"
+                      name="autoTarget"
+                      value="{{auto.target}}"
+                      placeholder="{{localize 'WOWPT.Config.Fields.soundPlaceholder'}}"
+                    />
+                    <button
+                      type="button"
+                      class="wow-pt-icon-btn"
+                      data-action="browseAudio"
+                      title="{{localize 'WOWPT.Config.Fields.browseAudio'}}"
+                    >
+                      <i class="fa-solid fa-music"></i>
+                    </button>
+                  {{/if}}
+
+                  {{#if auto.isVisibility}}
+                    <input
+                      type="text"
+                      name="autoTarget"
+                      value="{{auto.target}}"
+                      placeholder="{{localize 'WOWPT.Config.Fields.visibilityPlaceholder'}}"
+                    />
+                    <button
+                      type="button"
+                      class="wow-pt-icon-btn"
+                      data-action="pickCanvasTarget"
+                      title="{{localize 'WOWPT.Config.Fields.pickCanvasTarget'}}"
+                    >
+                      <i class="fa-solid fa-crosshairs"></i>
+                    </button>
+                  {{/if}}
+
+                  {{#if auto.isChat}}
+                    <input
+                      type="text"
+                      name="autoTarget"
+                      value="{{auto.target}}"
+                      placeholder="{{localize 'WOWPT.Config.Fields.chatPlaceholder'}}"
+                    />
+                  {{/if}}
+                </div>
+              {{/unless}}
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+    </div>
+
     <!-- Checkboxes for Visibility & Player Options -->
     <div class="wow-pt-field full-width wow-pt-checkbox-row">
       <label>

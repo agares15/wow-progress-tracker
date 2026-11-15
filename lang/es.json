@@ -47,7 +47,67 @@
         "milestoneValue": "En Valor",
         "milestoneIcon": "Icono / Imagen",
         "addMilestone": "Agregar Milestone",
-        "removeMilestone": "Eliminar Milestone"
+        "removeMilestone": "Eliminar Milestone",
+        "automations": "Automatizaciones / Disparadores",
+        "addAutomation": "Agregar Automatización",
+        "removeAutomation": "Eliminar Automatización",
+        "selectMacro": "-- Selecciona una Macro --",
+        "selectTable": "-- Selecciona una RollTable --",
+        "selectTracker": "-- Selecciona un Tracker --",
+        "soundPlaceholder": "ruta/al/sonido.ogg",
+        "visibilityPlaceholder": "Selecciona Token/Tile en el mapa y pulsa la mirilla ->",
+        "chatPlaceholder": "Mensaje para enviar al chat...",
+        "pickCanvasTarget": "Usar Token / Tile Seleccionado en Escena",
+        "browseAudio": "Explorar Archivo de Audio"
+      },
+      "Triggers": {
+        "onComplete": "Al Completarse (Llega al Máximo)",
+        "onZero": "Al Llegar a Cero (0)",
+        "onMilestone": "Al Alcanzar un Milestone",
+        "onStep": "En Cada Paso (+/-)"
+      },
+      "Actions": {
+        "macro": "Ejecutar Macro",
+        "sound": "Reproducir Sonido",
+        "visibility": "Alternar Visibilidad de Token / Tile",
+        "pause": "Pausar el Juego",
+        "rollTable": "Tirar en Tabla (RollTable)",
+        "chat": "Enviar Mensaje al Chat",
+        "chainTracker": "Revelar Otro Tracker a los Jugadores",
+        "advanceTracker": "Avanzar Otro Tracker (+1 Paso)"
+      },
+      "ActionHints": {
+        "macro": "Ejecuta la Macro seleccionada pasándole { tracker, prevValue, value, max, trigger }.",
+        "sound": "Reproduce un archivo de audio para todos los jugadores. Usa el botón de música para elegir el archivo.",
+        "visibility": "Muestra u oculta Tokens/Tiles de la escena actual. Selecciónalos en el mapa y pulsa el botón de mirilla.",
+        "pause": "Pone la partida en pausa automáticamente cuando se cumple esta condición.",
+        "rollTable": "Realiza una tirada automática en la RollTable seleccionada y muestra el resultado en el chat.",
+        "chat": "Publica en el chat el mensaje personalizado que escribas abajo.",
+        "chainTracker": "Hace visible para los jugadores otro Progress Tracker que estaba oculto (ideal para pasar a una Fase 2).",
+        "advanceTracker": "Aumenta el progreso del Tracker seleccionado en 1 paso (+step)."
+      },
+      "InputTriggers": {
+        "Title": "Disparador de Entrada (Auto-Avance)",
+        "Direction": "Dirección",
+        "IntervalSeconds": "Intervalo (Segundos)",
+        "Modes": {
+          "none": "Solo Manual (Sin Auto-Avance)",
+          "combatRound": "En Cada Ronda de Combate",
+          "combatTurn": "En Cada Turno de Combate",
+          "timer": "Temporizador en Tiempo Real (Cada X Segundos)",
+          "worldTime": "Tiempo del Mundo In-Game (Cada X Segundos)"
+        },
+        "Directions": {
+          "1": "Aumentar (+ Paso)",
+          "-1": "Disminuir (- Paso)"
+        },
+        "Hints": {
+          "none": "La barra solo cambia cuando se pulsa manualmente o mediante una Macro.",
+          "combatRound": "Avanza automáticamente 1 paso al inicio de cada nueva Ronda en el encuentro de combate activo.",
+          "combatTurn": "Avanza automáticamente 1 paso en cada cambio de Turno durante el combate activo.",
+          "timer": "Avanza automáticamente 1 paso cada X segundos reales mientras el juego NO esté en pausa.",
+          "worldTime": "Avanza automáticamente 1 paso cada X segundos de tiempo dentro del mundo (compatible con Simple Calendar)."
+        }
       },
       "Styles": {
         "continuous": "Continuous Bar",

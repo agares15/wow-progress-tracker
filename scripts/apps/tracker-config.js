@@ -27,7 +27,7 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
       contentClasses: ["standard-form"]
     },
     position: {
-      width: 500,
+      width: 540,
       height: "auto"
     },
     form: {
@@ -37,8 +37,12 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
     },
     actions: {
       browseFile: TrackerConfigApp.#onBrowseFile,
+      browseAudio: TrackerConfigApp.#onBrowseAudio,
+      pickCanvasTarget: TrackerConfigApp.#onPickCanvasTarget,
       addMilestone: TrackerConfigApp.#onAddMilestone,
       removeMilestone: TrackerConfigApp.#onRemoveMilestone,
+      addAutomation: TrackerConfigApp.#onAddAutomation,
+      removeAutomation: TrackerConfigApp.#onRemoveAutomation,
       cancel: TrackerConfigApp.#onCancel
     }
   };
@@ -64,10 +68,63 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
       data.milestones = [{ value: half, icon: "fa-solid fa-flag" }];
     }
 
+    // Build enriched automation rows so each action displays its exact UI control
+    data.automations = (data.automations || []).map((auto) => ({
+      ...auto,
+      hintKey: `WOWPT.Config.ActionHints.${auto.action || "macro"}`,
+      isMacro: auto.action === "macro",
+      isSound: auto.action === "sound",
+      isVisibility: auto.action === "visibility",
+      isPause: auto.action === "pause",
+      isRollTable: auto.action === "rollTable",
+      isChat: auto.action === "chat",
+      isTrackerTarget: auto.action === "chainTracker" || auto.action === "advanceTracker"
+    }));
+
     context.tracker = data;
     context.isEdit = this.isEdit;
     context.isMilestonesStyle = data.styleType === "milestones";
     context.canAddMilestone = data.milestones.length < 10;
+
+    // Input Trigger (Auto-Advance) context
+    const advMode = data.autoAdvanceMode || "none";
+    context.hasAutoAdvance = advMode !== "none";
+    context.needsAdvanceInterval = advMode === "timer" || advMode === "worldTime";
+    context.autoAdvanceHintKey = `WOWPT.Config.InputTriggers.Hints.${advMode}`;
+    context.autoAdvanceDirStr = String(data.autoAdvanceDir ?? 1);
+
+    context.inputTriggerModes = {
+      none: "WOWPT.Config.InputTriggers.Modes.none",
+      combatRound: "WOWPT.Config.InputTriggers.Modes.combatRound",
+      combatTurn: "WOWPT.Config.InputTriggers.Modes.combatTurn",
+      timer: "WOWPT.Config.InputTriggers.Modes.timer",
+      worldTime: "WOWPT.Config.InputTriggers.Modes.worldTime"
+    };
+
+    context.inputTriggerDirs = {
+      "1": "WOWPT.Config.InputTriggers.Directions.1",
+      "-1": "WOWPT.Config.InputTriggers.Directions.-1"
+    };
+
+    // Dropdown choices for Macros, RollTables, and other Trackers
+    context.macroOptions = {
+      "": game.i18n.localize("WOWPT.Config.Fields.selectMacro"),
+      ...Object.fromEntries((game.macros?.contents || []).map((m) => [m.id, m.name]))
+    };
+
+    context.tableOptions = {
+      "": game.i18n.localize("WOWPT.Config.Fields.selectTable"),
+      ...Object.fromEntries((game.tables?.contents || []).map((t) => [t.id, t.name]))
+    };
+
+    context.trackerOptions = {
+      "": game.i18n.localize("WOWPT.Config.Fields.selectTracker"),
+      ...Object.fromEntries(
+        TrackerStore.getAll()
+          .filter((t) => t.id !== data.id)
+          .map((t) => [t.id, t.title])
+      )
+    };
 
     context.styles = {
       continuous: "WOWPT.Config.Styles.continuous",
@@ -76,6 +133,24 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
       icons: "WOWPT.Config.Styles.icons",
       chase: "WOWPT.Config.Styles.chase",
       clock: "WOWPT.Config.Styles.clock"
+    };
+
+    context.triggerChoices = {
+      onComplete: "WOWPT.Config.Triggers.onComplete",
+      onZero: "WOWPT.Config.Triggers.onZero",
+      onMilestone: "WOWPT.Config.Triggers.onMilestone",
+      onStep: "WOWPT.Config.Triggers.onStep"
+    };
+
+    context.actionChoices = {
+      macro: "WOWPT.Config.Actions.macro",
+      sound: "WOWPT.Config.Actions.sound",
+      visibility: "WOWPT.Config.Actions.visibility",
+      pause: "WOWPT.Config.Actions.pause",
+      rollTable: "WOWPT.Config.Actions.rollTable",
+      chat: "WOWPT.Config.Actions.chat",
+      chainTracker: "WOWPT.Config.Actions.chainTracker",
+      advanceTracker: "WOWPT.Config.Actions.advanceTracker"
     };
 
     return context;
@@ -92,6 +167,26 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
         milestonesGroup.classList.toggle("is-hidden", ev.target.value !== "milestones");
       });
     }
+
+    // Re-render when changing Input Trigger (Auto-Advance) mode
+    const advModeSelect = this.element.querySelector('select[name="autoAdvanceMode"]');
+    if (advModeSelect) {
+      advModeSelect.addEventListener("change", () => {
+        this.#syncFormToModel();
+        this.render();
+      });
+    }
+
+    // Re-render automation row controls when changing Action type
+    this.element.querySelectorAll('select[name="autoAction"]').forEach((selectEl) => {
+      selectEl.addEventListener("change", (ev) => {
+        const row = ev.target.closest(".wow-pt-automation-row");
+        const targetInput = row?.querySelector('[name="autoTarget"]');
+        if (targetInput) targetInput.value = "";
+        this.#syncFormToModel();
+        this.render();
+      });
+    });
 
     // Sync color pickers with their text inputs
     this.element.querySelectorAll('input[type="color"][data-color-target]').forEach((picker) => {
@@ -117,6 +212,13 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
       icon: row.querySelector('[name="milestoneIcon"]')?.value?.trim() || "fa-solid fa-flag"
     }));
 
+    const autoRows = Array.from(form.querySelectorAll(".wow-pt-automation-row"));
+    const automations = autoRows.map((row) => ({
+      trigger: row.querySelector('[name="autoTrigger"]')?.value || "onComplete",
+      action: row.querySelector('[name="autoAction"]')?.value || "macro",
+      target: row.querySelector('[name="autoTarget"]')?.value?.trim() ?? ""
+    }));
+
     this.trackerModel.updateSource({
       title: form.querySelector('[name="title"]')?.value || this.trackerModel.title,
       description: form.querySelector('[name="description"]')?.value ?? "",
@@ -130,9 +232,12 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
       bgImage: form.querySelector('[name="bgImage"]')?.value ?? "",
       showToPlayers: Boolean(form.querySelector('[name="showToPlayers"]')?.checked),
       hideTitle: Boolean(form.querySelector('[name="hideTitle"]')?.checked),
-      hideNumbers: Boolean(form.querySelector('[name="hideNumbers"]')?.checked),
       allowPlayerEdit: Boolean(form.querySelector('[name="allowPlayerEdit"]')?.checked),
-      milestones: milestones.length > 0 ? milestones : [{ value: maxVal / 2, icon: "fa-solid fa-flag" }]
+      autoAdvanceMode: form.querySelector('[name="autoAdvanceMode"]')?.value || "none",
+      autoAdvanceDir: Number(form.querySelector('[name="autoAdvanceDir"]')?.value ?? this.trackerModel.autoAdvanceDir ?? 1),
+      autoAdvanceInterval: Math.max(1, Number(form.querySelector('[name="autoAdvanceInterval"]')?.value ?? this.trackerModel.autoAdvanceInterval ?? 60)),
+      milestones: milestones.length > 0 ? milestones : [{ value: maxVal / 2, icon: "fa-solid fa-flag" }],
+      automations
     });
   }
 
@@ -159,6 +264,29 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
     this.render();
   }
 
+  static async #onAddAutomation(event, target) {
+    this.#syncFormToModel();
+    const current = [...(this.trackerModel.automations || [])];
+    current.push({
+      trigger: "onComplete",
+      action: "macro",
+      target: ""
+    });
+    this.trackerModel.updateSource({ automations: current });
+    this.render();
+  }
+
+  static async #onRemoveAutomation(event, target) {
+    this.#syncFormToModel();
+    const idx = Number(target.dataset.index);
+    const current = [...(this.trackerModel.automations || [])];
+    if (Number.isNaN(idx)) return;
+
+    current.splice(idx, 1);
+    this.trackerModel.updateSource({ automations: current });
+    this.render();
+  }
+
   /**
    * Opens Foundry's FilePicker to choose an image/icon or bar texture.
    */
@@ -180,6 +308,47 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
     return fp.browse();
   }
 
+  /**
+   * Opens Foundry's FilePicker to choose an audio file for a Sound automation.
+   */
+  static async #onBrowseAudio(event, target) {
+    const input = target.closest(".wow-pt-auto-target-row")?.querySelector('input[name="autoTarget"]');
+    if (!input) return;
+
+    const current = input.value || "";
+    const PickerClass = foundry.applications?.ux?.FilePicker?.implementation || globalThis.FilePicker;
+    const fp = new PickerClass({
+      type: "audio",
+      current: current.includes("/") ? current : "",
+      callback: (path) => {
+        input.value = path;
+      }
+    });
+    return fp.browse();
+  }
+
+  /**
+   * Populates the automation target input with the UUIDs of currently selected Canvas Tokens or Tiles.
+   */
+  static async #onPickCanvasTarget(event, target) {
+    const input = target.closest(".wow-pt-auto-target-row")?.querySelector('input[name="autoTarget"]');
+    if (!input) return;
+
+    const controlledTokens = canvas?.tokens?.controlled || [];
+    const controlledTiles = canvas?.tiles?.controlled || [];
+    const docs = [
+      ...controlledTokens.map((t) => t.document?.uuid || t.id),
+      ...controlledTiles.map((t) => t.document?.uuid || t.id)
+    ].filter(Boolean);
+
+    if (docs.length === 0) {
+      ui.notifications?.info("Select one or more Tokens or Tiles on the canvas first.");
+      return;
+    }
+
+    input.value = docs.join(", ");
+  }
+
   static async #onCancel(event, target) {
     await this.close();
   }
@@ -195,6 +364,14 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
       icon: row.querySelector('[name="milestoneIcon"]')?.value?.trim() || "fa-solid fa-flag"
     }));
 
+    // Collect automations from DOM rows
+    const autoRows = Array.from(form.querySelectorAll(".wow-pt-automation-row"));
+    const automations = autoRows.map((row) => ({
+      trigger: row.querySelector('[name="autoTrigger"]')?.value || "onComplete",
+      action: row.querySelector('[name="autoAction"]')?.value || "macro",
+      target: row.querySelector('[name="autoTarget"]')?.value?.trim() ?? ""
+    }));
+
     const payload = {
       ...this.trackerModel.toObject(),
       title: raw.title,
@@ -208,9 +385,12 @@ export class TrackerConfigApp extends HandlebarsApplicationMixin(ApplicationV2) 
       icon: raw.icon ?? "",
       bgImage: raw.bgImage ?? "",
       milestones: milestones.length > 0 ? milestones : [{ value: maxVal / 2, icon: "fa-solid fa-flag" }],
+      automations,
+      autoAdvanceMode: raw.autoAdvanceMode || "none",
+      autoAdvanceDir: Number(raw.autoAdvanceDir ?? 1),
+      autoAdvanceInterval: Math.max(1, Number(raw.autoAdvanceInterval ?? 60)),
       showToPlayers: Boolean(raw.showToPlayers),
       hideTitle: Boolean(raw.hideTitle),
-      hideNumbers: Boolean(raw.hideNumbers),
       allowPlayerEdit: Boolean(raw.allowPlayerEdit)
     };
 

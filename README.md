@@ -1,5 +1,7 @@
 # WoW Progress Tracker (Foundry VTT)
 
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/workshopofwonders)
+
 An **ultra-lightweight**, **highly customizable**, and **system-agnostic** progress tracker module for **Foundry VTT**
 
 ## Installation
@@ -25,6 +27,9 @@ https://github.com/agares15/wow-progress-tracker/releases/download/v1.0/module.j
   - **Hide Title from Players**: Show only the visual progress bar to players while keeping the title secret.
   - **GM-Only Step Counter**: Exact numeric counters (`1 / 10`) are visible exclusively to the GM.
   - **Optional Player Interaction**: Allow players to increment or decrement specific progress bars when enabled by the GM.
+- **Built-in Automation Engine (v1.1.0)**:
+  - **Input Triggers (Auto-Advance)**: Automatically advance or decrease trackers on every **Combat Round**, **Combat Turn**, **Real-Time Timer** (while unpaused), or **In-Game World Time**.
+  - **Output Automations**: Trigger actions **On Complete**, **On Zero**, **On Milestone Reached**, or **On Every Step** — including running a **Macro**, playing a **Sound**, toggling **Token/Tile visibility**, **Pausing the game**, drawing from a **RollTable**, posting a **Chat Message**, or **Revealing / Advancing another Tracker**.
     
 - **Clean Frameless Player Overlay**:
   - For players, visible progress bars automatically float in the top-right corner immediately next to the right sidebar—with transparent card backgrounds, no window frame, and no close button.
@@ -36,3 +41,5 @@ https://github.com/agares15/wow-progress-tracker/releases/download/v1.0/module.j
 ![screenshot-2026-11-04-011350.avif](https://user51675.na.imgto.link/public/20261104/8a19e81a2c290928de740ef9-screenshot-2026-11-04-011350.avif)
 
 ![screenshot-2026-11-04-012239.avif](https://user51675.na.imgto.link/public/20261104/3abbe37e9cd987fdecf2d462-screenshot-2026-11-04-012239.avif)
+
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/workshopofwonders)

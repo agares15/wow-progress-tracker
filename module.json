@@ -2,9 +2,9 @@
   "id": "wow-progress-tracker",
   "title": "WoW's Progress Tracker",
   "description": "A lightweight, highly customizable, system-agnostic progress tracker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "compatibility": {
-    "minimum": "13",
+    "minimum": "12",
     "verified": "14",
     "maximum": "14"
   },
@@ -36,6 +36,6 @@
   ],
   "socket": true,
   "url": "https://github.com/agares15/wow-progress-tracker",
-  "manifest": "https://github.com/agares15/wow-progress-tracker/releases/download/v1.0/module.json",
-  "download": "https://github.com/agares15/wow-progress-tracker/releases/download/v1.0/wow-progress-tracker.zip"
+  "manifest": "https://github.com/agares15/wow-progress-tracker/releases/download/v1.1.0/module.json",
+  "download": "https://github.com/agares15/wow-progress-tracker/releases/download/v1.1.0/wow-progress-tracker.zip"
 }
