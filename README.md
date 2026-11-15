@@ -9,7 +9,7 @@ An **ultra-lightweight**, **highly customizable**, and **system-agnostic** progr
 In Foundry's Add-on Modules tab, click **Install Module** and paste this manifest URL:
 
 ```
-[https://github.com/agares15/wow-progress-tracker/releases/latest/download/module.json](https://github.com/agares15/wow-progress-tracker/releases/latest/download/module.json)
+https://github.com/agares15/wow-progress-tracker/releases/latest/download/module.json
 ```
 
 ## Key Features
