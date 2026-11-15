@@ -1,0 +1,39 @@
+name: Release Packaging
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update module.json version and download URL from release tag
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          jq --arg v "$TAG" \
+             --arg dl "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/wow-progress-tracker.zip" \
+             '.version = $v | .download = $dl' module.json > module.json.tmp && mv module.json.tmp module.json
+
+      - name: Create wow-progress-tracker.zip
+        run: |
+          zip -r wow-progress-tracker.zip \
+            module.json \
+            README.md \
+            CHANGELOG.md \
+            lang/ \
+            scripts/ \
+            styles/ \
+            templates/
+
+      - name: Upload module.json and wow-progress-tracker.zip to Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${GITHUB_REF_NAME}" module.json wow-progress-tracker.zip --clobber
